@@ -59,7 +59,6 @@ BinaryLogistic<-function(dataset, rowname = NULL, colname = NULL, yname=NULL, xn
   #############################################################################################
   ######################################## parameters check ###################################
   # check yname
-  
   if(!(yname %in% colnames(dataset))){
     return(list(ErrorMsg = paste("Error in response variable", yname, ": not exist")))
   }else{
@@ -146,8 +145,6 @@ BinaryLogistic<-function(dataset, rowname = NULL, colname = NULL, yname=NULL, xn
     return(ErrorMsg)
   }
   
-  # 
-  
   #############################################################################################
   ########################################## plot #############################################
   ErrorMsg<-tryCatch({
@@ -176,13 +173,13 @@ BinaryLogistic<-function(dataset, rowname = NULL, colname = NULL, yname=NULL, xn
 }
 
 # codes below are testing codes
-rm(list=ls(all=TRUE))
-String = "E:/WorkSpace/Rstudio/Deepaint/"
-setwd(String)
-data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
-dataset = data
-yname = 'dp_nervus'
-xname = c('pat_sex','pat_age','dp_diff')
-plotstr = paste(String, "LogisticRegression/", sep = '')
-plotname = 'roc'
-a = BinaryLogistic(dataset, yname = yname, xname = xname, plotstr = plotstr, plotname = plotname)
+# rm(list=ls(all=TRUE))
+# String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
+# setwd(String)
+# data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
+# dataset = data
+# yname = 'dp_nervus'
+# xname = c('pat_sex','pat_age','dp_diff')
+# plotstr = paste(String, "LogisticRegression/", sep = '')
+# plotname = 'roc'
+# a = BinaryLogistic(dataset, yname = yname, xname = xname, plotstr = plotstr, plotname = plotname)
