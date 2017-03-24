@@ -83,12 +83,12 @@ DescriptiveAanlysis<-function(dataset, rowname = NULL, colname = NULL){
 } 
 
 # codes below are testing codes
-# rm(list=ls(all=TRUE))
-# String = "E:/WorkSpace/Rstudio/Deepaint/"
-# setwd(String)
-# d = read.csv('data.csv',stringsAsFactors=F, na.strings = c(""))
-# dataset = d
-# 
-# a = DescriptiveAanlysis(dataset)
-# 
+rm(list=ls(all=TRUE))
+String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
+setwd(String)
+d = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
+dataset = d
+
+a = DescriptiveAanlysis(dataset)
+
 

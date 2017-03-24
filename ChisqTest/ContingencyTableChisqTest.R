@@ -127,11 +127,17 @@ ContingencyTableChisqTest<-function(dataset, rowname = NULL, colname = NULL, cha
     
     Frecytable =  t( apply(Counttable, 1, function(x){x/Colcount}))
     Frecytable = round(Frecytable*100, digits = 1)
+    Frecytable
+    
+    CounttableColName = colnames(Counttable)
+    CounttableColName = paste(CounttableColName, rep("Count", length(CounttableColName)), sep = '')
+    FrecytableColName = colnames(Counttable)
+    FrecytableColName = paste(FrecytableColName, rep("Ratio", length(CounttableColName)), sep = '')
     
     TableRowName = rownames(Counttable)
-    TablecolName = rep(colnames(Counttable),  times=2)
+    TableColName = c(CounttableColName, FrecytableColName)
     
-    TableResults = matrix(rbind(Counttable, Frecytable), nrow = nrow(Counttable), dimnames = list(TableRowName, TablecolName))
+    TableResults = matrix(rbind(Counttable, Frecytable), nrow = nrow(Counttable), dimnames = list(TableRowName, TableColName))
     
     ChiStatistic = result$statistic
     PValue = result$p.value
@@ -146,19 +152,26 @@ ContingencyTableChisqTest<-function(dataset, rowname = NULL, colname = NULL, cha
   }
   
   # return result
-  return(list(TableRowName = TableRowName, TablecolName = TablecolName, TableResults = TableResults,
-              ChiStatistic = ChiStatistic, PValue = PValue, Df = Df))
+  if(simulationp == TRUE){
+    return(list(TableRowName = TableRowName, TablecolName = TablecolName, TableResults = TableResults,
+                ChiStatistic = ChiStatistic, PValue = PValue))
+  }else{
+    return(list(TableRowName = TableRowName, TablecolName = TablecolName, TableResults = TableResults,
+                ChiStatistic = ChiStatistic, PValue = PValue, Df = Df))
+  }
+  
+
 }
 
 #codes below are testing codes
-# rm(list=ls(all=TRUE))
-# String = "E:/WorkSpace/Rstudio/Deepaint/"
-# setwd(String)
-# d = read.csv('data.csv',stringsAsFactors=F, na.strings = c(""))
-# dataset = d[,c(-2,-4)]
-# write.csv(dataset, file = "ContingencyTableChisqTest.csv", row.names = FALSE,na = "")
-# chavar1 = 'dp_diff'
-# chavar2 = 'pat_sex'
-# a = ContingencyTableChisqTest(dataset, chavar1 = chavar1, chavar2 = chavar2)
+ rm(list=ls(all=TRUE))
+ String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
+ setwd(String)
+ d = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
+ dataset = d[,c(-2,-4)]
+ write.csv(dataset, file = "ContingencyTableChisqTest.csv", row.names = FALSE,na = "")
+ chavar1 = 'dp_diff'
+ chavar2 = 'pat_sex'
+ a = ContingencyTableChisqTest(dataset, chavar1 = chavar1, chavar2 = chavar2)
 
 
