@@ -123,25 +123,32 @@ AgglomerativeHierarchicalCluster<-function(dataset, rowname = NULL, colname = NU
   #############################################################################################
   ########################################## plot #############################################
   ErrorMsg<-tryCatch({
+     
     # bannerplot
-    
-    filename = paste(plotstr, bannername, ".png")
-    png(file=filename, bg="white")
-    sub = paste("Agglomerative Coefficient = ", round(ClusterResult$ac, digits = 2))
-    adj = 0
-    nmax.lab = 35
-    max.strlen = 5
-    xax.pretty = TRUE
-    cluster::bannerplot(ClusterResult, fromLeft = TRUE, main = "Banner of of KMeansCluster", 
-                        sub = sub, adj = adj, xax.pretty = 10, nmax.lab = nmax.lab, 
-                        max.strlen = max.strlen)
-    dev.off()
+    if(!is.null(plotstr) & !is.null(bannername)){
+      filename = paste(plotstr, bannername, ".png")
+      png(file=filename, bg="white")
+      sub = paste("Agglomerative Coefficient = ", round(ClusterResult$ac, digits = 2))
+      adj = 0
+      nmax.lab = 35
+      max.strlen = 5
+      xax.pretty = TRUE
+      cluster::bannerplot(ClusterResult, fromLeft = TRUE, main = "Banner of of KMeansCluster", 
+                          sub = sub, adj = adj, xax.pretty = 10, nmax.lab = nmax.lab, 
+                          max.strlen = max.strlen)
+      dev.off()
+    }
+
     
     # pltree
-    filename = paste(plotstr, treename, ".png")
-    png(file=filename, bg="white", width = 1084, height = 780)
-    cluster::pltree(ClusterResult, main = "Dendrogram of KMeansCluster", sub = sub)
-    dev.off()
+    if(!is.null(plotstr) & !is.null(treename)){
+      filename = paste(plotstr, treename, ".png")
+      png(file=filename, bg="white", width = 1084, height = 780)
+      sub = paste("Agglomerative Coefficient = ", round(ClusterResult$ac, digits = 2))
+      cluster::pltree(ClusterResult, main = "Dendrogram of KMeansCluster", sub = sub)
+      dev.off()
+    }
+
     ErrorMsg = NULL
     
   }, error = function(e){

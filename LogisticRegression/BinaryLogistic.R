@@ -138,7 +138,7 @@ BinaryLogistic<-function(dataset, rowname = NULL, colname = NULL, yname=NULL, xn
     ErrorMsg = NULL
   
   }, error = function(e){
-    ErrorMsg = list(ErrorMsg = paste('Error in R glm function:', conditionMessage(e)))
+    ErrorMsg = list(ErrorMsg = paste('Error in abstracting information:', conditionMessage(e)))
   })
   
   if(!is.null(ErrorMsg)){
@@ -149,15 +149,18 @@ BinaryLogistic<-function(dataset, rowname = NULL, colname = NULL, yname=NULL, xn
   ########################################## plot #############################################
   ErrorMsg<-tryCatch({
     library(ROCR)
-    filename = paste(plotstr, plotname, ".png")
-    png(file=filename, bg="white")
-    
-    pre=predict(result,type='response')
-    pred=prediction(pre, dataset[[yname]])
-    perf=performance(pred,'tpr','fpr')
-    plot(perf, main='ROC Curve')
-    
-    dev.off()
+    if(!is.null(plotstr) & !is.null(plotname)){
+      filename = paste(plotstr, plotname, ".png", sep = '')
+      png(file=filename, bg="white", sep = '')
+      
+      pre=predict(result,type='response')
+      pred=prediction(pre, dataset[[yname]])
+      perf=performance(pred,'tpr','fpr')
+      plot(perf, main='ROC Curve')
+      
+      dev.off()
+    }
+
     ErrorMsg = NULL
     
   }, error = function(e){
