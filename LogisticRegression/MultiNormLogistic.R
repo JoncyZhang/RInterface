@@ -179,12 +179,12 @@ MultiNormLogistic<-function(dataset, rowname = NULL, colname = NULL, yname=NULL,
 }
 
 # codes below are testing codes
-rm(list=ls(all=TRUE))
-String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
-setwd(String)
-data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
-dataset = data
-dataset = na.omit(dataset)
-yname =  'dp_diff'
-xname = c('pat_age','pat_sex',"dp_nervus")
-a = MultiNormLogistic(dataset, yname = yname, xname = xname)
+# rm(list=ls(all=TRUE))
+# String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
+# setwd(String)
+# data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
+# dataset = data
+# dataset = na.omit(dataset)
+# yname =  'dp_diff'
+# xname = c('pat_age','pat_sex',"dp_nervus")
+# a = MultiNormLogistic(dataset, yname = yname, xname = xname)
