@@ -1,4 +1,4 @@
-DescriptiveAanlysis<-function(dataset, rowname = NULL, colname = NULL){
+DescriptiveAnalysis<-function(dataset, rowname = NULL, colname = NULL){
   #-------------------------------------------------------------------------------------------------
   # File: DescriptiveAanlysis.R
   # Version 1.0.0
@@ -27,16 +27,6 @@ DescriptiveAanlysis<-function(dataset, rowname = NULL, colname = NULL){
   
   #Check rowname/colname
   ErrorMsg<-tryCatch({
-    if(is.matrix(dataset)){
-      if(!is.null(rowname)){
-        rownames(dataset) = rowname
-      }
-      if(!is.null(colname)){
-        colnames(dataset) = colname
-      }
-      dataset = as.data.frame(dataset)
-    }
-    
     if(is.data.frame(dataset)){
       if(!is.null(rowname)){
         rownames(dataset) = rowname
@@ -68,27 +58,55 @@ DescriptiveAanlysis<-function(dataset, rowname = NULL, colname = NULL){
         dataset[[i]] =  as.factor(dataset[[i]])
     }
   }
-  
-  
+
   #############################################################################################
   ######################################### summary  ##########################################
-  DespResult = summary(dataset)
+  b = sapply(dataset, summary, na.rm=FALSE)
+  
+  #############################################################################################
+  ################################# abstract information  #####################################
   #return results
+  Result = list()
+  for(i in 1:length(b)){
+    if(is.factor(dataset[[i]])){
+      b[[i]] = as.matrix(b[[i]])
+      colname = c("frequenct","precentage")
+      rowname = rownames(b[[i]])
+      
+      pct = round(b[[i]]/sum(b[[i]]), digits = 2)*100
+      b[[i]] = cbind(b[[i]], pct)
+      colnames(b[[i]]) = colname
+    }else{
+      b[[i]] = round(t(as.matrix(b[[i]])), digits = 2)
+      colname = colnames(b[[i]])
+      rowname = names(b[i])
+    }
+    
+    RowName = paste(names(b[i]), "RowName", sep = '')
+    ColName = paste(names(b[i]), "ColName", sep = '')
+    DscpName = paste(names(b[i]), "Dscp", sep = '')
+    
+    eval(substitute(Result[[RowName]] <- rowname, list(RowName = RowName)))
+    eval(substitute(Result[[ColName]] <- colname, list(ColName = ColName)))
+    eval(substitute(Result[[DscpName]] <- b[[i]], list(DscpName = DscpName)))
+
+  }
   
-  DespResultRowName = rownames(DespResult)
-  DespResultColName = colnames(DespResult)
-  
-  return(list(DespResultRowName = DespResultRowName, DespResultColName = DespResultColName, DespResult = DespResult ))
+  return(Result)
   
 } 
 
 # codes below are testing codes
-rm(list=ls(all=TRUE))
-String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
-setwd(String)
-d = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
-dataset = d
+# rm(list=ls(all=TRUE))
+# String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
+# setwd(String)
+# d = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
+# dataset = d
+# 
+# a = DescriptiveAnalysis(dataset)
 
-a = DescriptiveAanlysis(dataset)
+
+
+
 
 
