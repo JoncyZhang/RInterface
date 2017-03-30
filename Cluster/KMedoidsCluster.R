@@ -1,4 +1,4 @@
-KMedoidsCluster<-function(dataset, rowname = NULL, colname = NULL, culstervar = NULL, centers=NULL, 
+KMedoidsCluster<-function(dataset, rowname = NULL, colname = NULL, culstervar = NULL, centers=3, 
                           metric = "euclidean", stand = FALSE){
 
   #-------------------------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ KMedoidsCluster<-function(dataset, rowname = NULL, colname = NULL, culstervar = 
         rownames(dataset) = rowname
       }
       if(!is.null(colname)){
-        colnames(dataset) = colname #注释掉这行
+        colnames(dataset) = colname 
       }
     }
     ErrorMsg = NULL
@@ -85,7 +85,7 @@ KMedoidsCluster<-function(dataset, rowname = NULL, colname = NULL, culstervar = 
     ErrorMsg = NULL
   }, 
   error = function(e){
-    ErrorMsg = list(ErrorMsg = paste('Error in rowname/colname:', conditionMessage(e)))
+    ErrorMsg = list(ErrorMsg = paste('Error in converting culstervar:', conditionMessage(e)))
   })
   if(!is.null(ErrorMsg)){
     return(ErrorMsg)
@@ -93,7 +93,7 @@ KMedoidsCluster<-function(dataset, rowname = NULL, colname = NULL, culstervar = 
   
   #############################################################################################
   ###################################### perform cluster ###################################
-  #K-Means Cluster
+  #K-Medoids Cluster
   ErrorMsg<-tryCatch({
     library(cluster)
     clusterset = dataset[,culstervar]
@@ -101,7 +101,7 @@ KMedoidsCluster<-function(dataset, rowname = NULL, colname = NULL, culstervar = 
     ErrorMsg = NULL
   }, 
   error = function(e){
-    ErrorMsg = list(ErrorMsg = paste('Error in rowname/colname:', conditionMessage(e)))
+    ErrorMsg = list(ErrorMsg = paste('Error in R pam function:', conditionMessage(e)))
   })
   if(!is.null(ErrorMsg)){
     return(ErrorMsg)

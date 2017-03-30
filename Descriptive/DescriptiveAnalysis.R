@@ -61,7 +61,7 @@ DescriptiveAnalysis<-function(dataset, rowname = NULL, colname = NULL){
 
   #############################################################################################
   ######################################### summary  ##########################################
-  b = sapply(dataset, summary, na.rm=FALSE)
+  b = lapply(dataset, summary, na.rm=FALSE)  #####此处把sapply 改为 lapply
   
   #############################################################################################
   ################################# abstract information  #####################################
@@ -97,13 +97,13 @@ DescriptiveAnalysis<-function(dataset, rowname = NULL, colname = NULL){
 } 
 
 # codes below are testing codes
-# rm(list=ls(all=TRUE))
-# String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
-# setwd(String)
-# d = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
-# dataset = d
-# 
-# a = DescriptiveAnalysis(dataset)
+rm(list=ls(all=TRUE))
+String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
+setwd(String)
+d = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
+dataset = d
+
+a = DescriptiveAnalysis(dataset)
 
 
 

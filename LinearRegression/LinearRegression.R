@@ -33,7 +33,7 @@ LinearRegression<-function(dataset, rowname = NULL, colname = NULL, yname = NULL
         rownames(dataset) = rowname
       }
       if(!is.null(colname)){
-        colnames(dataset) = colname #注释掉这行
+        colnames(dataset) = colname 
       }
     }
     ErrorMsg = NULL
@@ -73,15 +73,14 @@ LinearRegression<-function(dataset, rowname = NULL, colname = NULL, yname = NULL
   }
   
   # check yname
-  if(!all(yname %in% colnames(dataset))){
-    Missxname = yname[!(yname %in% colnames(dataset))]
-    return(list(ErrorMsg = paste("Error in response variable:", paste(Missxname, collapse = ' '), "not exist")))
-  }else{
-    for(i in yname){
-      if(is.character(dataset[[i]])){
-        dataset[[i]] = as.factor(dataset[[i]])
-      }
-    }
+  if(length(yname) != 1){
+    return(list(ErrorMsg = paste("Error in response variable: exactly one allowed, you have ", length(yname))))
+  }
+  if(!(yname %in% colnames(dataset))){
+    return(list(ErrorMsg = paste("Error in response variable:", yname, "not exist")))
+  }
+  if(!is.numeric(dataset[[i]])){
+    return(list(ErrorMsg = paste("Error in response variable:", yname, " require numeric")))
   }
   
   # check formulastring
@@ -189,14 +188,14 @@ LinearRegression<-function(dataset, rowname = NULL, colname = NULL, yname = NULL
     dev.off()
   }
   
-  ErrorMsg = NULL
+    ErrorMsg = NULL
   
-}, error = function(e){
-  ErrorMsg = list(ErrorMsg = paste('Error in abstracting information:', conditionMessage(e)))
-})
-if(!is.null(ErrorMsg)){
-  return(ErrorMsg)
-}
+  }, error = function(e){
+    ErrorMsg = list(ErrorMsg = paste('Error in abstracting information:', conditionMessage(e)))
+  })
+  if(!is.null(ErrorMsg)){
+   return(ErrorMsg)
+  }
   # return results
   return(list( RegResultRowName = RegResultRowName, RegResultColName = RegResultColName,RegResult,
                Rsquare = Rsquare,  AdjRsquare = AdjRsquare,

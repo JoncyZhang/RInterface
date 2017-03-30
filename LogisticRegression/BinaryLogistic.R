@@ -151,7 +151,7 @@ BinaryLogistic<-function(dataset, rowname = NULL, colname = NULL, yname=NULL, xn
     library(ROCR)
     if(!is.null(plotstr) & !is.null(plotname)){
       filename = paste(plotstr, plotname, ".png", sep = '')
-      png(file=filename, bg="white", sep = '')
+      png(file=filename, bg="white")
       
       pre=predict(result,type='response')
       pred=prediction(pre, dataset[[yname]])
