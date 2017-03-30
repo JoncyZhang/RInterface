@@ -1,5 +1,6 @@
-DoubleUnPairTTest<-function(dataset, rowname = NULL, colname = NULL, numvar = NULL, chavar = NULL, side = "twotail", mu = 0, confidence = 0.95, 
-                      varequal = FALSE){
+DoubleUnPairTTest<-function(dataset, rowname = NULL, colname = NULL, numvar = NULL, chavar = NULL, 
+                            side = "twotail", mu = 0, confidence = 0.95, 
+                            varequal = FALSE){
   #-------------------------------------------------------------------------------------------------
   # File: DoubleUnPairTTest.R
   # Version 1.0.0

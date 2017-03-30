@@ -153,10 +153,10 @@ ContingencyTableChisqTest<-function(dataset, rowname = NULL, colname = NULL, cha
   
   # return result
   if(simulationp == TRUE){
-    return(list(TableRowName = TableRowName, TablecolName = TablecolName, TableResults = TableResults,
+    return(list(TableRowName = TableRowName, TableColName = TableColName, TableResults = TableResults,
                 ChiStatistic = ChiStatistic, PValue = PValue))
   }else{
-    return(list(TableRowName = TableRowName, TablecolName = TablecolName, TableResults = TableResults,
+    return(list(TableRowName = TableRowName, TableColName = TableColName, TableResults = TableResults,
                 ChiStatistic = ChiStatistic, PValue = PValue, Df = Df))
   }
   
