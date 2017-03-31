@@ -537,6 +537,7 @@ GoodnessOfFitChisqTest<-function(dataset, rowname = NULL, colname = NULL, theory
   # delete NA
   dataset = na.omit(dataset)
   
+  
   #Check dataset ncol
   if(!ncol(dataset)==1){
     return(list(ErrorMsg = paste("Error in data: only 1 column allowed, you have", ncol(dataset))))
@@ -544,9 +545,14 @@ GoodnessOfFitChisqTest<-function(dataset, rowname = NULL, colname = NULL, theory
   
   #############################################################################################
   ############################ parameters check ###############################################
-  #Check theorypß
+  # give count of dataset to do chisq
+  if(!is.factor(dataset[[1]])){
+    return(list(ErrorMsg = "Error in dataset: must be  factor"))
+  }else{
+    dataset = as.data.frame(table(dataset))["Freq"] 
+  }
   
-  
+  #Check theoryp
   if(!is.null(theoryp)){
     if(!is.list(theoryp) ||!is.numeric(theoryp[[1]])){
       return(list(ErrorMsg = "Error in theoryp: must be numeric vector in list"))
@@ -1626,6 +1632,7 @@ rm(list=ls(all=TRUE))
 String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
 setwd(String)
 data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
+dataset = as.data.frame(data[,4])
 dataset = data[,c(1,4)]
 yname = 'pat_age'
 xname = 'dp_nervus'
