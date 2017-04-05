@@ -1634,7 +1634,7 @@ setwd(String)
 data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
 dataset = as.data.frame(data[,4])
 dataset = data[,c(1,4)]
-yname = 'pat_age'
+
 xname = 'dp_nervus'
 
 a = FactorAnalysis(dataset)

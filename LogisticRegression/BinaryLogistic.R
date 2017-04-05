@@ -19,6 +19,8 @@ BinaryLogistic<-function(dataset, rowname = NULL, colname = NULL, yname=NULL, xn
   
   #############################################################################################
   ########################################## data check #######################################
+  return(list(yname = yname, colname= colnames(dataset), flag =yname %in% colnames(dataset)))
+  
   #Check dataset completeness
   if(is.null(dataset)){
     return(list(ErrorMsg = "Error in input data: data is null"))
@@ -176,13 +178,16 @@ BinaryLogistic<-function(dataset, rowname = NULL, colname = NULL, yname=NULL, xn
 }
 
 # codes below are testing codes
-# rm(list=ls(all=TRUE))
-# String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
-# setwd(String)
-# data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
-# dataset = data
-# yname = 'dp_nervus'
-# xname = c('pat_sex','pat_age','dp_diff')
-# plotstr = paste(String, "LogisticRegression/", sep = '')
-# plotname = 'roc'
-# a = BinaryLogistic(dataset, yname = yname, xname = xname, plotstr = plotstr, plotname = plotname)
+rm(list=ls(all=TRUE))
+String = "/Users/joncy/RInterface/"
+setwd(String)
+data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
+dataset = data
+yname = 'dp_nervus'
+xname = c('pat_sex','pat_age','dp_diff')
+dataset = data.frame(性别 = c('1','0','1','0','1'), 年龄 = c('16','26','24','57','82'))
+yname = '性别'
+xname = c('年龄')
+plotstr = paste(String, "LogisticRegression/", sep = '')
+plotname = 'roc'
+a = BinaryLogistic(dataset, yname = yname, xname = xname, plotstr = plotstr, plotname = plotname)

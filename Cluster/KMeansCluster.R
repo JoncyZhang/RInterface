@@ -84,7 +84,7 @@ KMeansCluster<-function(dataset, rowname = NULL, colname = NULL, culstervar = NU
     ErrorMsg = NULL
   }, 
   error = function(e){
-    ErrorMsg = list(ErrorMsg = paste('Error in rowname/colname:', conditionMessage(e)))
+    ErrorMsg = list(ErrorMsg = paste('Error in culstervar:', conditionMessage(e)))
   })
   if(!is.null(ErrorMsg)){
     return(ErrorMsg)

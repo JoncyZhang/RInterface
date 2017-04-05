@@ -1,29 +1,6 @@
-DoubleUnPairTTest<-function(dataset, rowname = NULL, colname = NULL, numvar = NULL, chavar = NULL, 
-                            side = "twotail", mu = 0, confidence = 0.95, 
-                            varequal = FALSE){
-  #-------------------------------------------------------------------------------------------------
-  # File: DoubleUnPairTTest.R
-  # Version 1.0.0
-  # By chao zhang 
-  # 2017-03-18
-  # E-mail:chaozhang1209@gmail.comn 
-  #-------------------------------------------------------------------------------------------------
-  # Restricted Materials - Property of Deepaint Co.,Ltd.
-  #
-  # Use, duplication or disclosure is restricted 
-  #-------------------------------------------------------------------------------------------------
-  # DoubleUnPairTTest.R -  Perform double porputation unpaired t test of dataset. 
-  #                  Testing whether the sample mean difference is equal to true mean(mu).
-  #                 1. dataset must have two columns, a numeric vector and a character one.
-  #                 2. side is a string in ("TwoTail", "LeftTail", "RightTail"). Default is "TwoTail".             
-  #                 3. mu is numeric representing true mean. Default is 0. 
-  #                 4. confidence is numeric usually taking value between 0.9 and 0.99 representing confidence 
-  #                    level. Default is 0.95.
-  #                 5. varequal is logical representing whether there exists heteroscedasticity. If False, then
-  #                    Welch approximation is utilized to cope with inequal variance.
-  # To run this file, call it in DoubleUnPairTTest.R  
+DataCheck<-function(dataset, rowname = NULL, colname = NULL){
   #############################################################################################
-  ########################################## data check #######################################
+  ############################ data check #####################################################
   #Check dataset 
   if(is.null(dataset)){
     return(list(ErrorMsg = "Error in input data: data is null"))
@@ -62,13 +39,43 @@ DoubleUnPairTTest<-function(dataset, rowname = NULL, colname = NULL, numvar = NU
   if(!is.data.frame(dataset)){
     return(list(ErrorMsg = "Error in input data: must be dataframe"))
   }
+  
   # delete NA
   dataset = na.omit(dataset)
   
-  # check dataset ncol
-  if(!ncol(dataset)==2){
-    return(list(ErrorMsg = paste("Error in data: only 2 column allowed, you have", ncol(dataset))))
+  #Check dataset ncol
+  if(!ncol(dataset)==1){
+    return(list(ErrorMsg = paste("Error in data: only 1 column allowed, you have", ncol(dataset))))
   }
+  
+  #############################################################################################
+  ###################################### return check #########################################
+  return(dataset)
+}
+
+DoubleUnPairWilcoxTest<-function(dataset, rowname = NULL, colname = NULL, numvar = NULL, chavar = NULL,
+                                  side = "twotail", mu = 0, confidence = 0.95){
+  #-------------------------------------------------------------------------------------------------
+  # File: DoubleUnPairWilcoxTest.R
+  # Version 1.0.0
+  # By chao zhang 
+  # 2017-03-18
+  # E-mail:chaozhang1209@gmail.comn 
+  #-------------------------------------------------------------------------------------------------
+  # Restricted Materials - Property of Deepaint Co.,Ltd.
+  #
+  # Use, duplication or disclosure is restricted 
+  #-------------------------------------------------------------------------------------------------
+  # DoubleUnPairWilcoxTest.R -  Perform double porputation unpaired t test of dataset. 
+  #                  Testing whether the sample distribution difference is symmetric about mu.
+  #                 1. dataset must be a numeric vector or dataframe with one column
+  #                 2. side is a string in ("TwoTail", "LeftTail", "RightTail"). Default is "TwoTail".             
+  #                 3. mu is numeric representing symmetric point. Default is 0. 
+  #                 4. confidence is numeric usually taking value between 0.9 and 0.99 representing confidence 
+  #                    level. Default is 0.95.
+  # To run this file, call it in DoubleUnPairWilcoxTest.R  
+  
+  dataset = DataCheck(dataset, rowname = rowname, colname = colname)
   
   #############################################################################################
   ######################################## parameters check ###################################
@@ -105,7 +112,7 @@ DoubleUnPairTTest<-function(dataset, rowname = NULL, colname = NULL, numvar = NU
       return(ErrorMsg)
     }
   }
-
+  
   # Check side
   tpyes = c("two.sided", "less", "greater")
   mytypes = c("twotail", "lefttail", "righttail")
@@ -128,10 +135,6 @@ DoubleUnPairTTest<-function(dataset, rowname = NULL, colname = NULL, numvar = NU
     }
   }
   
-  # Check varequal
-  if(!is.logical(varequal) || length(varequal) != 1 ){
-    return(list(ErrorMsg = "Error in varequal: must be a single logical"))
-  }
   
   #############################################################################################
   ####################################### perform test ########################################
@@ -151,10 +154,12 @@ DoubleUnPairTTest<-function(dataset, rowname = NULL, colname = NULL, numvar = NU
       return(list(ErrorMsg = paste('Error in ',numvar, ':' , "no corresponding value for ", chavar, '=', faclevel[1])))
     }
   }
-  # Double UnPair TTest
+  
+  
+  # Double UnPair Wilcox Test
   ErrorMsg<-tryCatch({
-    result = t.test(column1, column2, alternative = side, mu = mu, conf.level = confidence, 
-                    var.equal = varequal, paired = FALSE)
+    result = wilcox.test(column1, column2, alternative = side, mu = mu, conf.level = confidence, 
+                         conf.int = TRUE, correct = TRUE, exact = FALSE, paired = FALSE)
     ErrorMsg = NULL
   }, 
   error = function(e){
@@ -164,13 +169,13 @@ DoubleUnPairTTest<-function(dataset, rowname = NULL, colname = NULL, numvar = NU
     return(ErrorMsg)
   }
   
+  
   # abstracting information from test result
-  TStatistic = result$statistic
-  PValue = result$p.value
+  WcoxStatistic = result$statistic[[1]]
+  Median = result$estimate[[1]]
+  PValue = result$p.value[[1]]
   LCI = result$conf.int[1]
   UCI = result$conf.int[2]
-  
-  return(list(TStatistic = TStatistic, PValue = PValue, LCI = LCI, UCI = UCI))
   
 }
 
@@ -181,7 +186,6 @@ DoubleUnPairTTest<-function(dataset, rowname = NULL, colname = NULL, numvar = NU
 # setwd(String)
 # d = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
 # dataset = d[,c(-3,-4)]
-# write.csv(dataset,file = 'DoubleUnPairTTest.csv',  row.names = FALSE)
 # numvar = 'pat_age'
 # chavar = 'pat_sex'
 # a = DoubleUnPairTTest(dataset, numvar = numvar, chavar = chavar)
