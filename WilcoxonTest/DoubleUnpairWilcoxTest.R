@@ -44,8 +44,8 @@ DataCheck<-function(dataset, rowname = NULL, colname = NULL){
   dataset = na.omit(dataset)
   
   #Check dataset ncol
-  if(!ncol(dataset)==1){
-    return(list(ErrorMsg = paste("Error in data: only 1 column allowed, you have", ncol(dataset))))
+  if(!ncol(dataset)==2){ #=2 而不是1
+    return(list(ErrorMsg = paste("Error in data: only 2ß column allowed, you have", ncol(dataset))))
   }
   
   #############################################################################################
@@ -177,15 +177,18 @@ DoubleUnPairWilcoxTest<-function(dataset, rowname = NULL, colname = NULL, numvar
   LCI = result$conf.int[1]
   UCI = result$conf.int[2]
   
+  #return
+  return(list(WcoxStatistic = WcoxStatistic, Median = Median, PValue = PValue, LCI = LCI, UCI = UCI))
+  
 }
 
 
 #codes below are testing codes
-# rm(list=ls(all=TRUE))
-# String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
-# setwd(String)
-# d = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
-# dataset = d[,c(-3,-4)]
-# numvar = 'pat_age'
-# chavar = 'pat_sex'
-# a = DoubleUnPairTTest(dataset, numvar = numvar, chavar = chavar)
+rm(list=ls(all=TRUE))
+String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
+setwd(String)
+d = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
+dataset = d[,c(-3,-4)]
+numvar = 'pat_age'
+chavar = 'pat_sex'
+a = DoubleUnPairWilcoxTest(dataset, numvar = numvar, chavar = chavar)
