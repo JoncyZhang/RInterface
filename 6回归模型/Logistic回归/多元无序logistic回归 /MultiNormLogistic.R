@@ -1,4 +1,61 @@
-MultiNormLogistic<-function(dataset, rowname = NULL, colname = NULL, yname=NULL, xname=NULL, 
+DataCheck<-function(dataset){
+  #############################################################################################
+  ############################ data check #####################################################
+  #Check dataset 
+  if(is.null(dataset)){
+    return(list(ErrorMsg = "Error in input data: data is null"))
+  }
+  
+  # check is dataframe
+  if(!is.data.frame(dataset)){
+    return(list(ErrorMsg = "Error in input data: must be dataframe"))
+  }
+  
+  # delete NA
+  dataset = na.omit(dataset)
+  
+  #Check dataset ncol
+  if(ncol(dataset)<1){
+    return(list(ErrorMsg = paste("Error in data: exactly 2 columns allowed, you have", ncol(dataset))))
+  }
+  
+  
+  return(dataset)
+}
+
+Sig<-function(v){
+  v = as.numeric(v)
+  significance = c()
+  for(i in v){
+    if(is.na(i)){
+      significance = c(significance, NA)
+      next
+    }
+    
+    if(i<=0.01){
+      significance = c(significance, '***')
+      next
+    }
+    
+    if(i>0.01 & i<=0.05){
+      significance = c(significance, '**')
+      next
+    }
+    
+    if(i>0.05 & i<=0.1){
+      significance = c(significance, '*')
+      next
+    }
+    if(i>0.1){
+      significance = c(significance, " ")
+      next
+    }
+    
+  }
+  return(significance)
+}
+
+MultiNormLogistic<-function(dataset,yname=NULL, xname=NULL, 
                             formulastring=NULL){
   #-------------------------------------------------------------------------------------------------
   # File: MultiNormLogistic.R
@@ -18,45 +75,7 @@ MultiNormLogistic<-function(dataset, rowname = NULL, colname = NULL, yname=NULL,
   # To run this file, call it in MultiNormLogistic.R 
   
   #############################################################################################
-  ########################################## data check #######################################
-  #Check dataset completeness
-  if(is.null(dataset)){
-    return(list(ErrorMsg = "Error in input data: data is null"))
-  }
-
-  #Check rowname/colname
-  ErrorMsg<-tryCatch({
-    if(is.data.frame(dataset)){
-      if(!is.null(rowname)){
-        rownames(dataset) = rowname
-      }
-      if(!is.null(colname)){
-        colnames(dataset) = colname
-      }
-    }
-    ErrorMsg = NULL
-  }, 
-  error = function(e){
-    ErrorMsg = list(ErrorMsg = paste('Error in rowname/colname:', conditionMessage(e)))
-  })
-  if(!is.null(ErrorMsg)){
-    return(ErrorMsg)
-  }
-  
-  
-  # check data again
-  if(!is.data.frame(dataset)){
-    return(list(ErrorMsg = "Error in input data: must be dataframe"))
-  }
-  
-  # delete NA
-  dataset = na.omit(dataset)
-  
-  # check dataset ncol
-  if(!ncol(dataset)>1){
-    return(list(ErrorMsg = paste("Error in data: at least 2 column allowed, you have", ncol(dataset))))
-  }
-  
+  dataset = DataCheck(dataset)
   #############################################################################################
   ######################################## parameters check ###################################
   # check yname
@@ -123,29 +142,7 @@ MultiNormLogistic<-function(dataset, rowname = NULL, colname = NULL, yname=NULL,
     RegResultRowName = rownames(RegResult)
     RegResultColName = colnames(RegResult)
     
-    significance = c()
-    for(i in 1:nrow(RegResult)){
-      if(RegResult[i,"Pr(>|t|)"]<0.1)
-      {
-        if(RegResult[i,"Pr(>|t|)"]<0.05 )
-        {
-          if(RegResult[i,"Pr(>|t|)"]<0.05)
-          {
-            significance = c(significance, '***')
-            next
-            
-          }
-          significance = c(significance, '**')
-          next
-        }
-        significance = c(significance, '*')
-        next
-      }else{
-        significance = c(significance, '')
-        next
-      }
-    } 
-    
+    significance = Sig(RegResult[,"Pr(>|t|)"])
     significance = matrix(significance, ncol = 1, dimnames = list(RegResultRowName, "significance"))
     RegResult = cbind(RegResult, significance)
     
@@ -179,12 +176,12 @@ MultiNormLogistic<-function(dataset, rowname = NULL, colname = NULL, yname=NULL,
 }
 
 # codes below are testing codes
-rm(list=ls(all=TRUE))
-String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
-setwd(String)
-data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
-dataset = data
-dataset = na.omit(dataset)
-yname =  'dp_diff'
-xname = c('pat_age','pat_sex',"dp_nervus")
-a = MultiNormLogistic(dataset, yname = yname, xname = xname)
+# rm(list=ls(all=TRUE))
+# String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
+# setwd(String)
+# data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
+# dataset = data
+# dataset = na.omit(dataset)
+# yname =  'dp_diff'
+# xname = c('pat_age','pat_sex',"dp_nervus")
+# a = MultiNormLogistic(dataset, yname = yname, xname = xname)

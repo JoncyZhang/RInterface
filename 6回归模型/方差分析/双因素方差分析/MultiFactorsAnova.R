@@ -191,15 +191,15 @@ BinFactorsAnova<-function(dataset, numvar = NULL, chavar = NULL,interaction = FA
 
 
 # codes below are testing codes
-rm(list=ls(all=TRUE))
-String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
-setwd(String)
-data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
-dataset = data[,c(1,2,4)]
-numvar = 'pat_age'
-chavar = c('pat_sex', 'dp_nervus')
-plotstr = String
-boxname = 'binbox'
-
-a = BinFactorsAnova(dataset, numvar = numvar, chavar = chavar, interaction = TRUE,
-                    plotstr = plotstr, boxname = boxname)
+# rm(list=ls(all=TRUE))
+# String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
+# setwd(String)
+# data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
+# dataset = data[,c(1,2,4)]
+# numvar = 'pat_age'
+# chavar = c('pat_sex', 'dp_nervus')
+# plotstr = String
+# boxname = 'binbox'
+# 
+# a = BinFactorsAnova(dataset, numvar = numvar, chavar = chavar, interaction = TRUE,
+#                     plotstr = plotstr, boxname = boxname)

@@ -11,9 +11,11 @@ DataCheck<-function(dataset, rowname = NULL, colname = NULL){
     
     if(is.data.frame(dataset)){
       if(!is.null(rowname)){
+        rowname = iconv(rowname,to = 'gbk')
         rownames(dataset) = rowname
       }
       if(!is.null(colname)){
+        colname = iconv(colname,to = 'gbk')
         colnames(dataset) = colname
       }
     }
@@ -42,9 +44,9 @@ DataCheck<-function(dataset, rowname = NULL, colname = NULL){
   return(dataset)
 }
 
-KMedoidsCluster<-function(dataset, rowname = NULL, colname = NULL, culstervar = NULL, centers=3, 
-                          metric = "euclidean", stand = FALSE){
-
+KMedoidsCluster<-function(dataset, rowname = NULL, colname = NULL, culstervar = NULL, 
+                          scale = TRUE, centers=3,  metric = "euclidean"){
+  
   #-------------------------------------------------------------------------------------------------
   # File: KMedoidsCluster.R
   # Version 1.0.0
@@ -64,7 +66,7 @@ KMedoidsCluster<-function(dataset, rowname = NULL, colname = NULL, culstervar = 
   #                      4.metric is the distance taking value in ("euclidean", "manhattan").
   #                      5.logical; if true, the measurements in x are standardized before 
   #                        calculating the dissimilaritie.
-                            
+  
   #                    
   #                                        
   # To run this file, call it in KMedoidsCluster.R 
@@ -76,45 +78,37 @@ KMedoidsCluster<-function(dataset, rowname = NULL, colname = NULL, culstervar = 
   if(is.null(culstervar)){
     culstervar = colnames(dataset)
   }else{
-    if(!all(culstervar %in% colnames(dataset))){
-      Missxname = culstervar[!(culstervar %in% colnames(dataset))]
-      return(list(ErrorMsg = paste("Error in culstervar:", paste(Missxname, collapse = ' '), "not exist")))
-    }
+    culstervar = iconv(culstervar, to = 'gbk')
+  }
+  if(length(culstervar)<1){
+    return(list(ErrorMsg = paste("Error in culstervar: at least 2 culstervar, you have", length(culstervar))))
+  }
+  if(!all(culstervar %in% colnames(dataset))){
+    Missxname = culstervar[!(culstervar %in% colnames(dataset))]
+    return(list(ErrorMsg = paste("Error in culstervar:", paste(Missxname, collapse = ' '), "not exist")))
   }
   
   # culstervar are required to be numeic
-  ErrorMsg<-tryCatch({
-    
-    for(i in culstervar){
-      if(!(i %in% colnames(dataset))){
-        return(list(ErrorMsg = paste("Error in culstervar", i, ": not exist")))
-      }else{
-        CharExitFlag = grep('[^0-9]',dataset[[i]])
-        if(length(CharExitFlag) >1){
-          dataset[[i]] = as.numeric(as.factor(dataset[[i]]))
-        }else{
-          dataset[[i]]  = as.numeric(dataset[[i]])
-        }
-      }  
+  for(i in culstervar){
+    CharExitFlag = is.na(as.numeric(dataset[[i]]))
+    if(any(CharExitFlag)){
+      dataset[[i]] = as.numeric(as.factor(dataset[[i]]))
+    }else{
+      dataset[[i]]  = as.numeric(dataset[[i]])
     }
-    
-    
-    ErrorMsg = NULL
-  }, 
-  error = function(e){
-    ErrorMsg = list(ErrorMsg = paste('Error in converting culstervar:', conditionMessage(e)))
-  })
-  if(!is.null(ErrorMsg)){
-    return(ErrorMsg)
-  }  
+  }
   
+  # check scale
+  if(scale == TRUE){
+    dataset = as.data.frame(scale(dataset[culstervar]))
+  }
   #############################################################################################
   ###################################### perform cluster ###################################
   #K-Medoids Cluster
   ErrorMsg<-tryCatch({
     library(cluster)
     clusterset = dataset[,culstervar]
-    ClusterResult = pam(clusterset, k = centers, diss = FALSE, metric =  metric, stand = stand)
+    ClusterResult = pam(clusterset, k = centers, diss = FALSE, metric =  metric, stand = F)
     ErrorMsg = NULL
   }, 
   error = function(e){
@@ -129,11 +123,11 @@ KMedoidsCluster<-function(dataset, rowname = NULL, colname = NULL, culstervar = 
   ClusterCenterRowName = rownames(ClusterCenter)
   ClusterCenterColName = colnames(ClusterCenter)
   
-  ClusterLabel = as.matrix(ClusterResult$clustering)
+  ClusterLabel = as.matrix(sort(ClusterResult$clustering))
   ClusterLabelRowName = rownames(ClusterLabel)
   ClusterLabelColName = "Label"
   colnames(ClusterLabel) = ClusterLabelColName
-
+  
   return(list(ClusterCenterRowName = ClusterCenterRowName, 
               ClusterCenterColName = ClusterCenterColName, 
               ClusterCenter = ClusterCenter,
@@ -141,20 +135,24 @@ KMedoidsCluster<-function(dataset, rowname = NULL, colname = NULL, culstervar = 
               ClusterLabelColName = ClusterLabelColName,
               ClusterLabel = ClusterLabel))
 }
+                         
 
 
 # codes below are testing codes
-# rm(list=ls(all=TRUE))
-# String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
-# setwd(String)
-# data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
-# dataset = data
-# culstervar = c('pat_sex','pat_age','dp_nervus')
-# centers = 3
-# metric = "euclidean"
-# stand = FALSE
-# 
-# a = KMedoidsCluster(dataset, culstervar = culstervar,  centers = 3,
-#                     metric = "euclidean", stand = FALSE)
+rm(list=ls(all=TRUE))
+String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
+setwd(String)
+data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
+dataset = data
+rowname = NULL
+colname = NULL
+culstervar = c('pat_sex','pat_age','dp_nervus')
+centers = 3
+metric = "euclidean"
+
+
+a = KMedoidsCluster(dataset, culstervar = culstervar,  
+                    scale = T,centers = 3, metric = "euclidean")
+                   
 
 

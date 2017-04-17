@@ -249,18 +249,27 @@ PrincipalComponentAnalysis<-function(dataset, yname = NULL, xname = NULL, scale=
   #############################################################################################
   ######################################## parameters check ###################################
   # check xname
-  xname = iconv(xname, to = 'gbk')
+  if(is.null(xname) & is.null(yname)){
+    xname = colnames(dataset)
+  }else{
+    xname = iconv(xname, to = 'gbk')
+  }
+  if(length(xname)<1){
+    return(list(ErrorMsg = paste("Error in xname: at least 2 xname, you have", length(xname))))
+  }
+  
   if(!all(xname %in% colnames(dataset))){
     Missxname = xname[!(xname %in% colnames(dataset))]
     return(list(ErrorMsg = paste("Error in xname:", paste(Missxname, collapse = ' '), "not exist")))
-  }else{
-    for(i in xname){
-      CharExitFlag = is.na(as.numeric(dataset[[i]]))
-      if(any(CharExitFlag)){
-        return(list(ErrorMsg = paste('Error in ', xname, ':', 'exist character in row'))) 
-                                     
-      }
-      dataset[[i]] = as.numeric(dataset[[i]])
+  }
+  
+  # xname are required to be numeic
+  for(i in xname){
+    CharExitFlag = is.na(as.numeric(dataset[[i]]))
+    if(any(CharExitFlag)){
+      dataset[[i]] = as.numeric(as.factor(dataset[[i]]))
+    }else{
+      dataset[[i]]  = as.numeric(dataset[[i]])
     }
   }
   
@@ -361,22 +370,22 @@ PrincipalComponentAnalysis<-function(dataset, yname = NULL, xname = NULL, scale=
 }
 
 #codes below are testing codes
-# rm(list=ls(all=TRUE))
-# String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
-# setwd(String)
-# data(USArrests)
-# dataset = USArrests
-# plotstr = String
-# compname = 'com'
-# screepname = 'Screep'
-# threshhold = 0.95
-# xname = c("Murder", "Assault", "UrbanPop" )
-# yname = c("Rape")
-# 
-# a = PrincipalComponentAnalysis(USArrests,xname = xname, yname = yname,
-#                                threshhold = threshhold,
-#                                plotstr = plotstr, compname = compname,
-#                                screepname = screepname)
+rm(list=ls(all=TRUE))
+String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
+setwd(String)
+data(USArrests)
+dataset = USArrests
+plotstr = String
+compname = 'com'
+screepname = 'Screep'
+threshhold = 0.95
+xname = c("Murder", "Assault", "UrbanPop" )
+yname = c("Rape")
+
+a = PrincipalComponentAnalysis(USArrests,xname = xname, yname = yname,
+                               threshhold = threshhold,
+                               plotstr = plotstr, compname = compname,
+                               screepname = screepname)
 
 
 

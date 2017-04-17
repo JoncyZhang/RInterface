@@ -44,33 +44,46 @@ CanonicalAnalysis<-function(dataset, yname = NULL, xname = NULL, scale=TRUE){
   ######################################## parameters check ###################################
   # check xname
   xname = iconv(xname, to = 'gbk')
+  
+  if(length(xname)<1){
+    return(list(ErrorMsg = paste("Error in xname: at least 2 xname, you have", length(xname))))
+  }
+  
   if(!all(xname %in% colnames(dataset))){
     Missxname = xname[!(xname %in% colnames(dataset))]
     return(list(ErrorMsg = paste("Error in xname:", paste(Missxname, collapse = ' '), "not exist")))
-  }else{
-    for(i in xname){
-      CharExitFlag = is.na(as.numeric(dataset[[i]]))
-      if(any(CharExitFlag)){
-        return(list(ErrorMsg = paste('Error in ', xname, ':', 'exist character in row'))) 
-      }
-      dataset[[i]] = as.numeric(dataset[[i]])
+  }
+  
+  # xname are required to be numeic
+  for(i in xname){
+    CharExitFlag = is.na(as.numeric(dataset[[i]]))
+    if(any(CharExitFlag)){
+      dataset[[i]] = as.numeric(as.factor(dataset[[i]]))
+    }else{
+      dataset[[i]]  = as.numeric(dataset[[i]])
     }
-  } 
+  }
   
   # check yname
   yname = iconv(yname, to = 'gbk')
+  
+  if(length(yname)<1){
+    return(list(ErrorMsg = paste("Error in data: at least 2 yname, you have", length(yname))))
+  }
   if(!all(yname %in% colnames(dataset))){
     Missxname = yname[!(yname %in% colnames(dataset))]
     return(list(ErrorMsg = paste("Error in yname:", paste(Missxname, collapse = ' '), "not exist")))
-  }else{
-    for(i in yname){
-      CharExitFlag = is.na(as.numeric(dataset[[i]]))
-      if(any(CharExitFlag)){
-        return(list(ErrorMsg = paste('Error in ', yname, ':', 'exist character in row'))) 
-      }
-      dataset[[i]] = as.numeric(dataset[[i]])
+  }
+  
+  # yname are required to be numeic
+  for(i in yname){
+    CharExitFlag = is.na(as.numeric(dataset[[i]]))
+    if(any(CharExitFlag)){
+      dataset[[i]] = as.numeric(as.factor(dataset[[i]]))
+    }else{
+      dataset[[i]]  = as.numeric(dataset[[i]])
     }
-  }  
+  }
   
   # check scale
   if(scale == TRUE){
@@ -112,14 +125,14 @@ CanonicalAnalysis<-function(dataset, yname = NULL, xname = NULL, scale=TRUE){
 }
 
 #codes below are testing codes
-rm(list=ls(all=TRUE))
-String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
-setwd(String)
-data(USArrests)
-dataset = USArrests
-dataset$add1 = rnorm(nrow(dataset), mean = 10, sd = 2)
-dataset$add2 = rnorm(nrow(dataset), mean = 11, sd = 3)
-plotstr = String
-xname = c("Murder", "Assault", "add1")
-yname = c( "UrbanPop","Rape","add2")
-a = CanonicalAnalysis(dataset, xname = xname, yname = yname)
+# rm(list=ls(all=TRUE))
+# String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
+# setwd(String)
+# data(USArrests)
+# dataset = USArrests
+# dataset$add1 = rnorm(nrow(dataset), mean = 10, sd = 2)
+# dataset$add2 = rnorm(nrow(dataset), mean = 11, sd = 3)
+# plotstr = String
+# xname = c("Murder", "Assault", "add1")
+# yname = c( "UrbanPop","Rape","add2")
+# a = CanonicalAnalysis(dataset, xname = xname, yname = yname)

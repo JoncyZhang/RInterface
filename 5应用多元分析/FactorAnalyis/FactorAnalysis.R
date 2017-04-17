@@ -44,23 +44,30 @@ FactorAnalysis<-function(dataset, xname = NULL, scale=TRUE, factors = NULL,
   #############################################################################################
   ######################################## parameters check ###################################
   # check xname
-  if(any(is.na(xname))){
+  if(is.null(xname)){
     xname = colnames(dataset)
   }else{
     xname = iconv(xname, to = 'gbk')
   }
+  
+  if(length(xname)<1){
+    return(list(ErrorMsg = paste("Error in xname: at least 2 xname, you have", length(xname))))
+  }
+  
   if(!all(xname %in% colnames(dataset))){
     Missxname = xname[!(xname %in% colnames(dataset))]
     return(list(ErrorMsg = paste("Error in xname:", paste(Missxname, collapse = ' '), "not exist")))
-  }else{
-    for(i in xname){
-      CharExitFlag = is.na(as.numeric(dataset[[i]]))
-      if(any(CharExitFlag)){
-        return(list(ErrorMsg = paste('Error in ', xname, ':', 'exist character in row'))) 
-      }
-      dataset[[i]] = as.numeric(dataset[[i]])
+  }
+  
+  # xname are required to be numeic
+  for(i in xname){
+    CharExitFlag = is.na(as.numeric(dataset[[i]]))
+    if(any(CharExitFlag)){
+      dataset[[i]] = as.numeric(as.factor(dataset[[i]]))
+    }else{
+      dataset[[i]]  = as.numeric(dataset[[i]])
     }
-  }  
+  }
   
   # check scale
   if(scale == TRUE){
@@ -125,12 +132,12 @@ FactorAnalysis<-function(dataset, xname = NULL, scale=TRUE, factors = NULL,
                        
 
 #codes below are testing codes
-rm(list=ls(all=TRUE))
-String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
-setwd(String)
-data(USArrests)
-dataset = USArrests
-dataset$add1 = rnorm(nrow(dataset), mean = 10, sd = 2)
-dataset$add2 = rnorm(nrow(dataset), mean = 11, sd = 3)
-xname = c("Murder", "Assault", "UrbanPop","Rape", "add1","add2")
-a = FactorAnalysis(dataset, xname = xname)
+# rm(list=ls(all=TRUE))
+# String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
+# setwd(String)
+# data(USArrests)
+# dataset = USArrests
+# dataset$add1 = rnorm(nrow(dataset), mean = 10, sd = 2)
+# dataset$add2 = rnorm(nrow(dataset), mean = 11, sd = 3)
+# xname = c("Murder", "Assault", "UrbanPop","Rape", "add1","add2")
+# a = FactorAnalysis(dataset, xname = xname)

@@ -192,13 +192,13 @@ UinFactorAnova<-function(dataset, numvar = NULL, chavar = NULL,
 }
 
 # codes below are testing codes
-rm(list=ls(all=TRUE))
-String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
-setwd(String)
-data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
-dataset = data[c(1,2)]
-numvar = 'pat_age'
-chavar = 'pat_sex'
-plotstr = String
-boxname = 'boxplot'
-a = UinFactorAnova(dataset, numvar = numvar, chavar = chavar, plotstr = plotstr, boxname = boxname)
+# rm(list=ls(all=TRUE))
+# String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
+# setwd(String)
+# data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
+# dataset = data[c(1,2)]
+# numvar = 'pat_age'
+# chavar = 'pat_sex'
+# plotstr = String
+# boxname = 'boxplot'
+# a = UinFactorAnova(dataset, numvar = numvar, chavar = chavar, plotstr = plotstr, boxname = boxname)

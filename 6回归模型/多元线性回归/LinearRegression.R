@@ -223,22 +223,22 @@ LinearRegression<-function(dataset, yname = NULL, xname = NULL, formulastring = 
 }   
 
 # codes below are testing codes
-rm(list=ls(all=TRUE))
-String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
-setwd(String)
-data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
-dataset = data
-yname = 'pat_age'
-xname = c('pat_sex','dp_diff','dp_nervus')
-intercept = TRUE
-plotstr = String
-scattername = 'myscatter'
-resifitname = 'myresifit'
-normalqqname = 'mynormalqq'
-scallocname = 'myscalloc'
-resilevname = 'myresilev'
-a = LinearRegression(dataset, yname = yname, xname = xname, intercept = intercept,
-                     plotstr = plotstr,scattername = scattername,
-                     resifitname = resifitname, normalqqname = normalqqname,
-                     scallocname = scallocname, resilevname = resilevname)
+# rm(list=ls(all=TRUE))
+# String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
+# setwd(String)
+# data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
+# dataset = data
+# yname = 'pat_age'
+# xname = c('pat_sex','dp_diff','dp_nervus')
+# intercept = TRUE
+# plotstr = String
+# scattername = 'myscatter'
+# resifitname = 'myresifit'
+# normalqqname = 'mynormalqq'
+# scallocname = 'myscalloc'
+# resilevname = 'myresilev'
+# a = LinearRegression(dataset, yname = yname, xname = xname, intercept = intercept,
+#                      plotstr = plotstr,scattername = scattername,
+#                      resifitname = resifitname, normalqqname = normalqqname,
+#                      scallocname = scallocname, resilevname = resilevname)
 
