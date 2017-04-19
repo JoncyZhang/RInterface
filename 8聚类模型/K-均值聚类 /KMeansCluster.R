@@ -132,19 +132,19 @@ KMeansCluster<-function(dataset,rowname = NULL, colname = NULL,culstervar = NULL
 
 
 #codes below are testing codes
-rm(list=ls(all=TRUE))
-String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
-setwd(String)
-data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
-dataset = data
-rowname = NULL
-colname = NULL
-culstervar = c('pat_sex','pat_age','dp_diff','dp_nervus')
-scale = TRUE
-centers = 3
-algorithm = "Hartigan-Wong"
-
-a = KMeansCluster(dataset, culstervar = culstervar,  centers = 3)
-
+# rm(list=ls(all=TRUE))
+# String = "/Users/joncy/WorkSpace/RStudio/Deepaint/"
+# setwd(String)
+# data = read.csv('datacon.csv',stringsAsFactors=F, na.strings = c(""))
+# dataset = data
+# rowname = NULL
+# colname = NULL
+# culstervar = c('pat_sex','pat_age','dp_diff','dp_nervus')
+# scale = TRUE
+# centers = 3
+# algorithm = "Hartigan-Wong"
+# 
+# a = KMeansCluster(dataset, culstervar = culstervar,  centers = 3)
+# 
 
 
